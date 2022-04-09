@@ -5,6 +5,7 @@ public class AgentBehaviour : MonoBehaviour
     public float weight = 1.0f;
     protected CelluloAgent agent;
     public bool canMove = false;
+    public Timer tmr;
 
     public virtual void Awake()
     {
@@ -12,11 +13,15 @@ public class AgentBehaviour : MonoBehaviour
     }
     public virtual void FixedUpdate()
     {
-        if(canMove){
-            if (agent.blendWeight)
-                agent.SetSteering(GetSteering(), weight);
-            else
-                agent.SetSteering(GetSteering());
+        if (!tmr.isGameOverOrNot())
+        {
+            if (canMove)
+            {
+                if (agent.blendWeight)
+                    agent.SetSteering(GetSteering(), weight);
+                else
+                    agent.SetSteering(GetSteering());
+            }
         }
     }
     public virtual Steering GetSteering()

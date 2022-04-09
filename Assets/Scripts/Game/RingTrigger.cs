@@ -4,39 +4,55 @@ using UnityEngine;
 
 public class RingTrigger : MonoBehaviour
 {
-    private int playerOneScore;
-    private int playerTwoScore;
+
+    public AudioClip winPoint;
+    private AudioSource src;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerOneScore = 0; playerTwoScore = 0;
-        
+        src = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-     void OnTriggerEnter(Collider other){
+    void OnTriggerEnter(Collider other)
+    {
         Debug.Log(other.transform.parent.gameObject.name + " triggers.");
 
-        if (this.CompareTag("ghostSheep")){
-            float diffWithPlayerOne = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position);
-            float diffWithPlayerTwo = Vector3.Distance(GameObject.FindGameObjectWithTag("Player2").transform.position, transform.position);
+        if (other.transform.parent.gameObject.CompareTag("ghostSheep"))
+        {
 
+            GameObject closest = FindClosestEnemy();
+            closest.GetComponent<ChangeScore>().incrementScore();
+            src.clip = winPoint;
+            src.Play();
+        }
 
-            if (diffWithPlayerOne > diffWithPlayerTwo)
+    }
+
+    public GameObject FindClosestEnemy()
+    {
+        GameObject[] dogs;
+        float distance = Mathf.Infinity;
+        dogs = GameObject.FindGameObjectsWithTag("CelluloDog");
+        GameObject closest = null;
+
+        Vector3 position = gameObject.transform.position;
+        foreach (GameObject dog in dogs)
+        {
+            Vector3 diff = dog.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
             {
-                ++playerTwoScore;
-            }
-            else
-            {
-                ++playerOneScore;
-
+                closest = dog;
+                distance = curDistance;
             }
         }
-        
+        return closest;
     }
 }

@@ -11,8 +11,10 @@ public class GhostSheepBehavior : AgentBehaviour
     private float currentTime;
     public AudioClip audioSheep;
     public AudioClip audioWolf;
+
+    public AudioClip losePoint;
     private AudioSource src;
-    
+
 
     public void Start()
     {
@@ -27,26 +29,28 @@ public class GhostSheepBehavior : AgentBehaviour
         currentTime = 0.0f;
         timer = Random.Range(10.0f, 20.0f);
         state = -state;
-        
-        if( state == 1.0f)
+        if (!tmr.isGameOverOrNot())
         {
-            src.clip = audioWolf;
-            transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.red, 0);
+            if (state == 1.0f)
+            {
+
+                src.clip = audioWolf;
+                transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.red, 0);
+            }
+            else
+            {
+                src.clip = audioSheep;
+                transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.green, 0);
+                minDistance = 20.0f;
+            }
+            src.Play();
         }
-        else
-        {
-            src.clip = audioSheep;
-            transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.green, 0);
-            minDistance = 20.0f;
-        }
-        src.Play();
-       
-    
+
     }
     public override void FixedUpdate()
     {
 
-        if (canMove)
+        if (canMove && ! tmr.isGameOverOrNot())
         {
             currentTime += Time.deltaTime;
 
@@ -76,17 +80,26 @@ public class GhostSheepBehavior : AgentBehaviour
 
             Vector3 direction = (celluloDog.transform.position - transform.position) * state;
             direction.Normalize();
-            steering.linear = direction * agent.maxAccel;
+            if (state == 1.0f)
+            {
+
+                steering.linear = direction * (agent.maxAccel - 2);
+            }
+            else
+            {
+
+                steering.linear = direction * agent.maxAccel;
+            }
             steering.linear = this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.
                                 linear, agent.maxAccel));
         }
         return steering;
     }
 
-    (GameObject, float) FindClosestEnemy(float distance)
+    public (GameObject, float) FindClosestEnemy(float distance)
     {
         GameObject[] dogs;
-        if(state == 1.0f)
+        if (state == 1.0f)
         {
             minDistance = Mathf.Infinity;
         }
@@ -105,6 +118,17 @@ public class GhostSheepBehavior : AgentBehaviour
             }
         }
         return (closest, distance);
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (state == 1.0f)
+        {
+            collision.gameObject.GetComponent<ChangeScore>().decrementScore();
+            src.clip = losePoint;
+            src.Play();
+
+        }
     }
 
 
