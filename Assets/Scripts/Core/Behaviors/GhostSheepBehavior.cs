@@ -21,7 +21,7 @@ public class GhostSheepBehavior : AgentBehaviour
         src = GetComponent<AudioSource>();
         state = -1.0f;
         currentTime = 0.0f;
-        timer = 15.0f;
+        timer = Random.Range(10.0f, 20.0f);
 
     }
     public void changeState()

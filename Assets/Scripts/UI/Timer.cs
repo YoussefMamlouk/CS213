@@ -18,11 +18,12 @@ public class Timer : MonoBehaviour
     public GameObject img;
     private bool isGameOver = false; 
     public GameObject ButtonPlayAgain;
+    public GameObject BackButton;
     public ChangeScore player1;
     public ChangeScore player2;
     public TextMeshProUGUI winnerText;
 
-    public Slider slider;
+    public Scrollbar slider;
     public GameManager gameManager;
     public bool timerStart = false;
 
@@ -54,11 +55,13 @@ public class Timer : MonoBehaviour
             }
             
         }
-        slider.value = initTimerValue;
-        if( initTimerValue >= 120.0f)
+        slider.size = initTimerValue / 120.0f;
+        if ( initTimerValue >= 120.0f)
         {
             isGameOver = true;
             ButtonPlayAgain.SetActive(true);
+            BackButton.SetActive(false);
+            slider.gameObject.SetActive(false);
             img.SetActive(true);
             GameOverText.text = "Game Over ! \n\n" +
                 "THE WINNER IS :";
@@ -67,7 +70,7 @@ public class Timer : MonoBehaviour
                 WinnerTextBlue.text  = "TEAM BLUE";
                
             }
-            else if (player1.getScore() > player2.getScore())
+            else if (player1.getScore() < player2.getScore())
             {
                 
                 WinnerTextPurple.text = "TEAM PURPLE";
