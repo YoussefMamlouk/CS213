@@ -7,18 +7,18 @@ public class RingTrigger : MonoBehaviour
 
     public AudioClip winPoint;
     private AudioSource src;
+    private bool musicPlaying;
 
     // Start is called before the first frame update
     void Start()
     {
         src = GetComponent<AudioSource>();
+        musicPlaying = true;
 
     }
-
-    // Update is called once per frame
-    void Update()
+    public void muteUnmute()
     {
-
+        musicPlaying = !musicPlaying;
     }
     void OnTriggerEnter(Collider other)
     {
@@ -30,7 +30,10 @@ public class RingTrigger : MonoBehaviour
             GameObject closest = FindClosestEnemy();
             closest.GetComponent<ChangeScore>().incrementScore();
             src.clip = winPoint;
-            src.Play();
+            if (musicPlaying)
+            {
+                src.Play();
+            }
         }
 
     }

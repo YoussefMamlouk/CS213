@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-//using UnityEditor.SceneManagement;
 
 
 
@@ -17,6 +16,5 @@ public class ChangeScene : MonoBehaviour
     public void playBack()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-
     }
 }

@@ -11,6 +11,7 @@ public class GhostSheepBehavior : AgentBehaviour
     private float currentTime;
     public AudioClip audioSheep;
     public AudioClip audioWolf;
+    private bool musicPlaying;
 
     public AudioClip losePoint;
     private AudioSource src;
@@ -19,6 +20,7 @@ public class GhostSheepBehavior : AgentBehaviour
     public void Start()
     {
         src = GetComponent<AudioSource>();
+        musicPlaying = true;
         state = -1.0f;
         currentTime = 0.0f;
         timer = Random.Range(10.0f, 20.0f);
@@ -33,7 +35,6 @@ public class GhostSheepBehavior : AgentBehaviour
         {
             if (state == 1.0f)
             {
-
                 src.clip = audioWolf;
                 transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.red, 0);
             }
@@ -43,10 +44,21 @@ public class GhostSheepBehavior : AgentBehaviour
                 transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.green, 0);
                 minDistance = 20.0f;
             }
-            src.Play();
+            if (musicPlaying) { src.Play();
+            }
+            else
+            {
+                src.Stop();
+            }
+           
         }
 
     }
+    public void muteUnmute()
+    {
+        musicPlaying = !musicPlaying;
+    }
+
     public override void FixedUpdate()
     {
 
@@ -126,7 +138,14 @@ public class GhostSheepBehavior : AgentBehaviour
         {
             collision.gameObject.GetComponent<ChangeScore>().decrementScore();
             src.clip = losePoint;
-            src.Play();
+            if (musicPlaying)
+            {
+                src.Play();
+            }
+            else
+            {
+                src.Stop();
+            }
 
         }
     }

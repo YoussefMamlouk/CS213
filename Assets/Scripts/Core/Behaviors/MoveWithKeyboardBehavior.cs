@@ -9,20 +9,33 @@ public enum InputKeyboard{
 }
 public class MoveWithKeyboardBehavior : AgentBehaviour
 {
-    public InputKeyboard inputKeyboard;
+    private InputKeyboard inputKeyboard;
+
+
+    public void changeStatusToWasd()
+    {
+         inputKeyboard = InputKeyboard.wasd;          
+        
+    }
+    public void changeStatusToArrows()
+    {
+    inputKeyboard = InputKeyboard.arrows;
+    }
+    
 
     public override Steering GetSteering()
     {
-        float horizontal;
-        float vertical;
+        float horizontal = 0f;
+        float vertical = 0f;
         Steering steering = new Steering();
+
         //implement your code here
         if (inputKeyboard == InputKeyboard.arrows)
         {
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
         }
-        else
+        else if(inputKeyboard == InputKeyboard.wasd)
         {
             horizontal = Input.GetAxis("Horizontal WASD");
             vertical = Input.GetAxis("Vertical WASD");

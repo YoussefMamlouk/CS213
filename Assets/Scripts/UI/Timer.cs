@@ -9,7 +9,9 @@ using System;
 public class Timer : MonoBehaviour
 {
     private float initTimerValue;
- 
+
+    public GameObject pauseButton;
+    public TextMeshProUGUI timerWhenResume;
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI GameOverText;
     public TextMeshProUGUI WinnerTextBlue;
@@ -22,24 +24,29 @@ public class Timer : MonoBehaviour
     public ChangeScore player1;
     public ChangeScore player2;
     public TextMeshProUGUI winnerText;
+    public timeDisplayer timeDisplayer;
+    private float maxTime;
+    public Slider sld;
 
     public Scrollbar slider;
     public GameManager gameManager;
     public bool timerStart = false;
 
     public void Awake() {
-        initTimerValue = Time.time; 
+        initTimerValue = Time.time;
+        maxTime = 0;
     }
 
     // Start is called before the first frame update
     public void Start() {
         resetTimer();
         timerText.text = string.Format("{0:00}:{1:00}", 0, 0);
-        
+        maxTime = timeDisplayer.getRealTime();
     }
 
     // Update is called once per frame
     public void Update() {
+        timerWhenResume.text = timerText.text; 
         if (timerStart && !isGameOver)
         {
             if (initTimerValue <= 120.0f)
@@ -55,10 +62,12 @@ public class Timer : MonoBehaviour
             }
             
         }
-        slider.size = initTimerValue / 120.0f;
-        if ( initTimerValue >= 120.0f)
+        slider.size = initTimerValue / maxTime;
+        if ( initTimerValue >= maxTime)
         {
             isGameOver = true;
+            
+            pauseButton.SetActive(false);
             ButtonPlayAgain.SetActive(true);
             BackButton.SetActive(false);
             slider.gameObject.SetActive(false);
@@ -98,4 +107,5 @@ public class Timer : MonoBehaviour
     {
         return isGameOver;
     }
+   
 }
