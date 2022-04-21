@@ -8,7 +8,7 @@ using System;
 */
 public class Timer : MonoBehaviour
 {
-    private float initTimerValue;
+    public float initTimerValue;
 
     public GameObject pauseButton;
     public TextMeshProUGUI timerWhenResume;
@@ -32,6 +32,13 @@ public class Timer : MonoBehaviour
     public GameManager gameManager;
     public bool timerStart = false;
 
+    public GameObject gem;
+    public GameObject player1GameObject;
+    public GameObject player2GameObject;
+    private bool GemSpawned;
+    private AudioSource gemSoundSource;
+    public AudioClip gemSound;
+
     public void Awake() {
         initTimerValue = Time.time;
         maxTime = 0;
@@ -40,6 +47,10 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     public void Start() {
         resetTimer();
+        gemSoundSource = gem.GetComponent<AudioSource>();
+        gemSoundSource.clip = gemSound;
+        GemSpawned = false;
+        gem.SetActive(false);
         timerText.text = string.Format("{0:00}:{1:00}", 0, 0);
         maxTime = timeDisplayer.getRealTime();
     }
@@ -66,7 +77,6 @@ public class Timer : MonoBehaviour
         if ( initTimerValue >= maxTime)
         {
             isGameOver = true;
-            
             pauseButton.SetActive(false);
             ButtonPlayAgain.SetActive(true);
             BackButton.SetActive(false);
@@ -91,7 +101,41 @@ public class Timer : MonoBehaviour
           
          
         }
+        float f = UnityEngine.Random.Range(-10000f, 10000f);
+        if (f > 9999f)
+        {
+            print(f.ToString());
+        }
+        if (f > 9999f && !GemSpawned)
+        {
+            appearGem();
+        }
     }
+
+    private void appearGem()
+    {
+        Vector3 gemPosition = new Vector3(UnityEngine.Random.Range(0f, 16f), 0f, UnityEngine.Random.Range(-8f, 0f));
+
+        while ((gemPosition - player1GameObject.transform.position).magnitude < 1 || (gemPosition - player2GameObject.transform.position).magnitude < 1)
+        {
+            gemPosition = new Vector3(UnityEngine.Random.Range(0f, 16f), 0f, UnityEngine.Random.Range(-8f, 0f));
+        }
+        gem.SetActive(true);
+        gem.transform.position = gemPosition;
+        GemSpawned = true;
+    }
+
+    public void destroyGem()
+    {
+        gem.SetActive(false);
+        gemSoundSource.Play();
+    }
+
+    public void bonusApplied() {
+        GemSpawned = false;
+        gemSoundSource.Play();
+    }
+
 
     public void resetTimer()
     {
