@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class GhostSheepBehavior : AgentBehaviour
 {
-
     private float minDistance = 20.0f;
     private float timer;
     // -1 if fuit, 1 if suit
@@ -12,6 +11,7 @@ public class GhostSheepBehavior : AgentBehaviour
     public AudioClip audioSheep;
     public AudioClip audioWolf;
     private bool musicPlaying;
+
 
     public AudioClip losePoint;
     private AudioSource src;
@@ -61,8 +61,7 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public override void FixedUpdate()
     {
-
-        if (canMove && ! tmr.isGameOverOrNot())
+        if (canMove && !tmr.isGameOverOrNot())
         {
             currentTime += Time.deltaTime;
 
