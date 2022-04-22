@@ -10,7 +10,7 @@ public enum InputKeyboard{
 public class MoveWithKeyboardBehavior : AgentBehaviour
 {
     private InputKeyboard inputKeyboard;
-
+    private bool ready = false;
 
     public void changeStatusToWasd()
     {
@@ -25,27 +25,41 @@ public class MoveWithKeyboardBehavior : AgentBehaviour
 
     public override Steering GetSteering()
     {
-        float horizontal = 0f;
-        float vertical = 0f;
+        canMove = !tmr.isGameOverOrNot();
         Steering steering = new Steering();
+        if (canMove){
+            float horizontal = 0f;
+            float vertical = 0f;
+            
 
-        //implement your code here
-        if (inputKeyboard == InputKeyboard.arrows)
-        {
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-        }
-        else if(inputKeyboard == InputKeyboard.wasd)
-        {
-            horizontal = Input.GetAxis("Horizontal WASD");
-            vertical = Input.GetAxis("Vertical WASD");
-        }
+            //implement your code here
+            if (inputKeyboard == InputKeyboard.arrows)
+            {
+                horizontal = Input.GetAxis("Horizontal");
+                vertical = Input.GetAxis("Vertical");
+            }
+            else if(inputKeyboard == InputKeyboard.wasd)
+            {
+                horizontal = Input.GetAxis("Horizontal WASD");
+                vertical = Input.GetAxis("Vertical WASD");
+            }
+            
+
         
-
-    
-        steering.linear = new Vector3(horizontal, 0, vertical) * agent.maxAccel;
-        steering.linear = this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.linear, agent.maxAccel));
+            steering.linear = new Vector3(horizontal, 0, vertical) * agent.maxAccel;
+            steering.linear = this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.linear, agent.maxAccel));
+            
+        }
         return steering;
+        
+    }
+
+    public override void OnCelluloLongTouch(int key){
+        ready = true;
+    }
+
+    public bool getReady(){
+        return ready;
     }
 
 }

@@ -19,6 +19,7 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public void Start()
     {
+       
         src = GetComponent<AudioSource>();
         musicPlaying = true;
         state = -1.0f;
@@ -61,6 +62,7 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public override void FixedUpdate()
     {
+        canMove = !tmr.isGameOverOrNot();
         if (canMove && !tmr.isGameOverOrNot())
         {
             currentTime += Time.deltaTime;
@@ -79,32 +81,36 @@ public class GhostSheepBehavior : AgentBehaviour
     }
     public override Steering GetSteering()
     {
-
         Steering steering = new Steering();
-
-        GameObject celluloDog;
-        float distance = Mathf.Infinity;
-        (celluloDog, distance) = FindClosestEnemy(distance);
         steering.linear = new Vector3(0, 0, 0);
-        if (distance != Mathf.Infinity)
-        {
-
-            Vector3 direction = (celluloDog.transform.position - transform.position) * state;
-            direction.Normalize();
-            if (state == 1.0f)
+        if (canMove){
+            
+            GameObject celluloDog;
+            float distance = Mathf.Infinity;
+            (celluloDog, distance) = FindClosestEnemy(distance);
+            
+            if (distance != Mathf.Infinity)
             {
 
-                steering.linear = direction * (agent.maxAccel - 2);
-            }
-            else
-            {
+                Vector3 direction = (celluloDog.transform.position - transform.position) * state;
+                direction.Normalize();
+                if (state == 1.0f)
+                {
 
-                steering.linear = direction * agent.maxAccel;
+                    steering.linear = direction * (agent.maxAccel - 2);
+                }
+                else
+                {
+
+                    steering.linear = direction * agent.maxAccel;
+                }
+                steering.linear = this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.
+                                    linear, agent.maxAccel));
             }
-            steering.linear = this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.
-                                linear, agent.maxAccel));
+            
         }
         return steering;
+        
     }
 
     public (GameObject, float) FindClosestEnemy(float distance)
@@ -148,6 +154,11 @@ public class GhostSheepBehavior : AgentBehaviour
 
         }
     }
+     
+    public float getstate() {
+        return state;
+    }
+
 
 
 
