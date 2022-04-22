@@ -21,6 +21,7 @@ public class Timer : MonoBehaviour
     private bool isGameOver = false; 
     public GameObject ButtonPlayAgain;
     public GameObject BackButton;
+    public GameObject StartButton;
     public ChangeScore player1;
     public ChangeScore player2;
     public TextMeshProUGUI winnerText;
@@ -35,6 +36,7 @@ public class Timer : MonoBehaviour
     public GameObject gem;
     public GameObject player1GameObject;
     public GameObject player2GameObject;
+    public GameObject ghostSheep;
     private bool GemSpawned;
     private AudioSource gemSoundSource;
     public AudioClip gemSound;
@@ -57,6 +59,16 @@ public class Timer : MonoBehaviour
 
     // Update is called once per frame
     public void Update() {
+
+        if (player1GameObject.GetComponent<MoveWithKeyboardBehavior>().getReady() 
+                && player2GameObject.GetComponent<MoveWithKeyboardBehavior>().getReady()){
+                player1GameObject.GetComponent<AgentBehaviour>().setIsMoving();
+                player2GameObject.GetComponent<AgentBehaviour>().setIsMoving();
+                ghostSheep.GetComponent<AgentBehaviour>().setIsMoving();
+                StartButton.SetActive(false);
+                startTimer();
+        }
+
         timerWhenResume.text = timerText.text; 
         if (timerStart && !isGameOver)
         {
@@ -71,6 +83,24 @@ public class Timer : MonoBehaviour
             {
                 timerStart = false;
             }
+
+            if (ghostSheep.GetComponent<GhostSheepBehavior>().getstate() == -1){
+                player1GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                player2GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                player1GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
+                player2GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
+            }
+            else
+            {
+                player1GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                player2GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                player1GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(false);
+                player2GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(false);
+                player1GameObject.GetComponent<CelluloAgentRigidBody>().MoveOnStone();
+                player2GameObject.GetComponent<CelluloAgentRigidBody>().MoveOnStone();
+            
+            }
+
             
         }
         slider.size = initTimerValue / maxTime;

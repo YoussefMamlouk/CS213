@@ -10,6 +10,7 @@ public class ChangeScore : MonoBehaviour
     private int score;
     public TextMeshProUGUI txt;
 
+
     public void Start()
     {
         score = 0;
@@ -35,4 +36,6 @@ public class ChangeScore : MonoBehaviour
     {
         return score;
     }
+
+    
 }

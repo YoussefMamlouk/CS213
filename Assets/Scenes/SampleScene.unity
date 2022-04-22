@@ -3202,6 +3202,10 @@ PrefabInstance:
       value: 0.0509078
       objectReference: {fileID: 0}
     - target: {fileID: 4052793752220753789, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
+      propertyPath: m_Name
+      value: Dog1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4052793752220753789, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
       propertyPath: m_TagString
       value: CelluloDog
       objectReference: {fileID: 0}
@@ -4795,6 +4799,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1339500229}
+        m_TargetAssemblyTypeName: Timer, Assembly-CSharp
+        m_MethodName: initalize
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &705653338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6306,6 +6322,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74da1f9ef776f314c901e9c778652c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 1
+  canMove: 0
+  tmr: {fileID: 1339500229}
   txt: {fileID: 154851482}
 --- !u!114 &998131064
 MonoBehaviour:
@@ -7968,6 +7987,7 @@ MonoBehaviour:
   img: {fileID: 575793614}
   ButtonPlayAgain: {fileID: 1797914583}
   BackButton: {fileID: 1677485291}
+  StartButton: {fileID: 705653335}
   player1: {fileID: 1551153441}
   player2: {fileID: 998131063}
   winnerText: {fileID: 0}
@@ -7979,6 +7999,7 @@ MonoBehaviour:
   gem: {fileID: 2147300146}
   player1GameObject: {fileID: 1551153435}
   player2GameObject: {fileID: 998131057}
+  ghostSheep: {fileID: 1754026720}
   gemSound: {fileID: 0}
 --- !u!224 &1339500230
 RectTransform:
@@ -9164,6 +9185,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74da1f9ef776f314c901e9c778652c42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weight: 1
+  canMove: 0
+  tmr: {fileID: 1339500229}
   txt: {fileID: 991883034}
 --- !u!1 &1575646971
 GameObject:
@@ -10211,7 +10235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_Name
-      value: CelluloAgent (1)
+      value: Dog2
       objectReference: {fileID: 0}
     - target: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_TagString
@@ -10578,7 +10602,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_Name
-      value: CelluloAgent (2)
+      value: GhostSheep
       objectReference: {fileID: 0}
     - target: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_IsActive
