@@ -18,7 +18,7 @@ public class Timer : MonoBehaviour
     public TextMeshProUGUI WinnerTextPurple;
     public TextMeshProUGUI WinnerTextDraw;
     public GameObject img;
-    private bool isGameOver = false; 
+    private bool isGameOver = true; 
     public GameObject ButtonPlayAgain;
     public GameObject BackButton;
     public GameObject StartButton;
@@ -84,22 +84,6 @@ public class Timer : MonoBehaviour
                 timerStart = false;
             }
 
-            if (ghostSheep.GetComponent<GhostSheepBehavior>().getstate() == -1){
-                player1GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
-                player2GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
-                player1GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
-                player2GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
-            }
-            else
-            {
-                player1GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
-                player2GameObject.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
-                player1GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(false);
-                player2GameObject.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(false);
-                player1GameObject.GetComponent<CelluloAgentRigidBody>().MoveOnStone();
-                player2GameObject.GetComponent<CelluloAgentRigidBody>().MoveOnStone();
-            
-            }
 
             
         }
@@ -175,6 +159,7 @@ public class Timer : MonoBehaviour
     public void startTimer()
     {
         timerStart = true;
+        isGameOver = false;
     }
     
     public bool isGameOverOrNot()

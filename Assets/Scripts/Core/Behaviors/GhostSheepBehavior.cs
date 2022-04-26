@@ -15,16 +15,18 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public AudioClip losePoint;
     private AudioSource src;
-
+    private GameObject[] dogs;
 
     public void Start()
     {
        
         src = GetComponent<AudioSource>();
         musicPlaying = true;
-        state = -1.0f;
+        state = 1.0f;
+        changeState();
         currentTime = 0.0f;
         timer = Random.Range(10.0f, 20.0f);
+        dogs = GameObject.FindGameObjectsWithTag("CelluloDog");
 
     }
     public void changeState()
@@ -38,12 +40,20 @@ public class GhostSheepBehavior : AgentBehaviour
             {
                 src.clip = audioWolf;
                 transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.red, 0);
+
+                dogs[0].GetComponent<CelluloAgentRigidBody>().MoveOnStone();
+                dogs[1].GetComponent<CelluloAgentRigidBody>().MoveOnStone();
             }
             else
             {
                 src.clip = audioSheep;
                 transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.green, 0);
                 minDistance = 20.0f;
+
+                dogs[0].GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                dogs[1].GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+                dogs[0].GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
+                dogs[1].GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
             }
             if (musicPlaying) { src.Play();
             }
@@ -51,6 +61,7 @@ public class GhostSheepBehavior : AgentBehaviour
             {
                 src.Stop();
             }
+        
            
         }
 
@@ -115,12 +126,12 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public (GameObject, float) FindClosestEnemy(float distance)
     {
-        GameObject[] dogs;
+
         if (state == 1.0f)
         {
             minDistance = Mathf.Infinity;
         }
-        dogs = GameObject.FindGameObjectsWithTag("CelluloDog");
+        
         GameObject closest = null;
 
         Vector3 position = gameObject.transform.position;
