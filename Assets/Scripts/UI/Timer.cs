@@ -10,6 +10,9 @@ public class Timer : MonoBehaviour
 {
     public float initTimerValue;
 
+    public CelluloAgentRigidBody player1rigid;
+    public CelluloAgentRigidBody player2rigid;
+
     public GameObject pauseButton;
     public TextMeshProUGUI timerWhenResume;
     public TextMeshProUGUI timerText;
@@ -31,37 +34,53 @@ public class Timer : MonoBehaviour
 
     public Scrollbar slider;
     public GameManager gameManager;
-    public bool timerStart = false;
+    public bool timerStart;
 
     public GameObject gem;
     public GameObject player1GameObject;
     public GameObject player2GameObject;
     public GameObject ghostSheep;
     private bool GemSpawned;
-    private AudioSource gemSoundSource;
+    public AudioSource gemSoundSource;
     public AudioClip gemSound;
+
+    public AudioClip IJA;
+
+    public bool musicPlaying;
+    private bool onPause;
 
     public void Awake() {
         initTimerValue = Time.time;
-        maxTime = 0;
+        maxTime = 30;
+           timerStart = false;
+        isGameOver = true;
+    }
+    public void pauseUnpause(){
+        onPause = !onPause;
     }
 
     // Start is called before the first frame update
     public void Start() {
+
         resetTimer();
-        gemSoundSource = gem.GetComponent<AudioSource>();
-        gemSoundSource.clip = gemSound;
+        timerStart = false;
+        isGameOver = true;
+        onPause = false;
+        gemSoundSource = this.GetComponent<AudioSource>();
         GemSpawned = false;
         gem.SetActive(false);
         timerText.text = string.Format("{0:00}:{1:00}", 0, 0);
         maxTime = timeDisplayer.getRealTime();
+        musicPlaying = true ; 
     }
 
     // Update is called once per frame
     public void Update() {
+        player1.changeColor(player1rigid.initialColor);
+        player2.changeColor(player2rigid.initialColor);
 
         if (player1GameObject.GetComponent<MoveWithKeyboardBehavior>().getReady() 
-                && player2GameObject.GetComponent<MoveWithKeyboardBehavior>().getReady()){
+                && player2GameObject.GetComponent<MoveWithKeyboardBehavior>().getReady() && !onPause){
                 player1GameObject.GetComponent<AgentBehaviour>().setIsMoving();
                 player2GameObject.GetComponent<AgentBehaviour>().setIsMoving();
                 ghostSheep.GetComponent<AgentBehaviour>().setIsMoving();
@@ -70,9 +89,9 @@ public class Timer : MonoBehaviour
         }
 
         timerWhenResume.text = timerText.text; 
-        if (timerStart && !isGameOver)
+        if (timerStart && !isGameOver && !onPause)
         {
-            if (initTimerValue <= 120.0f)
+            if (initTimerValue <= maxTime)
             {
                 initTimerValue += Time.deltaTime;
                 float minutes = Mathf.FloorToInt(initTimerValue / 60);
@@ -88,7 +107,7 @@ public class Timer : MonoBehaviour
             
         }
         slider.size = initTimerValue / maxTime;
-        if ( initTimerValue >= maxTime)
+        if (initTimerValue >= maxTime && !onPause)
         {
             isGameOver = true;
             pauseButton.SetActive(false);
@@ -100,13 +119,15 @@ public class Timer : MonoBehaviour
                 "THE WINNER IS :";
             if(player1.getScore() > player2.getScore())
             { 
-                WinnerTextBlue.text  = "TEAM BLUE";
+                WinnerTextBlue.text  = "TEAM LEFT";
+                WinnerTextBlue.color = player1rigid.initialColor;
                
             }
             else if (player1.getScore() < player2.getScore())
             {
                 
-                WinnerTextPurple.text = "TEAM PURPLE";
+                WinnerTextPurple.text = "TEAM RIGHT";
+                WinnerTextPurple.color = player2rigid.initialColor;
                 
             } else
             {
@@ -115,12 +136,10 @@ public class Timer : MonoBehaviour
           
          
         }
-        float f = UnityEngine.Random.Range(-10000f, 10000f);
-        if (f > 9999f)
-        {
-            print(f.ToString());
-        }
-        if (f > 9999f && !GemSpawned)
+        float f = UnityEngine.Random.Range(-7500f, 7500f);
+       
+        if ( f > 7497f && !GemSpawned && initTimerValue <= maxTime && !onPause && timerStart && !isGameOver)
+
         {
             appearGem();
         }
@@ -128,26 +147,39 @@ public class Timer : MonoBehaviour
 
     private void appearGem()
     {
-        Vector3 gemPosition = new Vector3(UnityEngine.Random.Range(0f, 16f), 0f, UnityEngine.Random.Range(-8f, 0f));
+        Vector3 gemPosition = new Vector3(UnityEngine.Random.Range(3f, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
 
-        while ((gemPosition - player1GameObject.transform.position).magnitude < 1 || (gemPosition - player2GameObject.transform.position).magnitude < 1)
+        while ((gemPosition - player1GameObject.transform.position).magnitude < 2 || (gemPosition - player2GameObject.transform.position).magnitude < 2)
         {
-            gemPosition = new Vector3(UnityEngine.Random.Range(0f, 16f), 0f, UnityEngine.Random.Range(-8f, 0f));
+            gemPosition = new Vector3(UnityEngine.Random.Range(3, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
         }
         gem.SetActive(true);
         gem.transform.position = gemPosition;
         GemSpawned = true;
+        if( musicPlaying && !onPause){
+       gemSoundSource.clip = gemSound;
+
+        gemSoundSource.Play();}
+    }
+    public void stopMusic(){
+        gemSoundSource.Stop();
     }
 
     public void destroyGem()
     {
         gem.SetActive(false);
-        gemSoundSource.Play();
+         if( musicPlaying && !onPause){
+              gemSoundSource.clip = gemSound;
+        gemSoundSource.Play();}
     }
-
+    public void muteUnmute(){
+        musicPlaying = !musicPlaying;
+    }
     public void bonusApplied() {
         GemSpawned = false;
-        gemSoundSource.Play();
+     if( musicPlaying && !onPause){
+        gemSoundSource.clip = IJA;
+        gemSoundSource.Play();}
     }
 
 

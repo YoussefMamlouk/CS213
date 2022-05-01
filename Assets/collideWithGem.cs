@@ -6,6 +6,7 @@ public class collideWithGem : MonoBehaviour
 {
     public Timer timer;
     private bool gainTwoPoints;
+    public AudioClip gemClip;
     
 
     public void Start()

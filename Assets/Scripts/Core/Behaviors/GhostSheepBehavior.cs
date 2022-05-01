@@ -10,16 +10,20 @@ public class GhostSheepBehavior : AgentBehaviour
     private float currentTime;
     public AudioClip audioSheep;
     public AudioClip audioWolf;
-    private bool musicPlaying;
+    public bool musicPlaying;
 
 
     public AudioClip losePoint;
     private AudioSource src;
     private GameObject[] dogs;
 
+    private bool onPause;
+     public void pauseUnpause(){
+        onPause = !onPause;
+    }
     public void Start()
     {
-       
+        onPause = false;
         src = GetComponent<AudioSource>();
         musicPlaying = true;
         state = 1.0f;
@@ -34,7 +38,7 @@ public class GhostSheepBehavior : AgentBehaviour
         currentTime = 0.0f;
         timer = Random.Range(10.0f, 20.0f);
         state = -state;
-        if (!tmr.isGameOverOrNot())
+        if (!tmr.isGameOverOrNot() && !onPause)
         {
             if (state == 1.0f)
             {
@@ -74,7 +78,7 @@ public class GhostSheepBehavior : AgentBehaviour
     public override void FixedUpdate()
     {
         canMove = !tmr.isGameOverOrNot();
-        if (canMove && !tmr.isGameOverOrNot())
+        if (canMove && !tmr.isGameOverOrNot() && !onPause)
         {
             currentTime += Time.deltaTime;
 
@@ -94,7 +98,7 @@ public class GhostSheepBehavior : AgentBehaviour
     {
         Steering steering = new Steering();
         steering.linear = new Vector3(0, 0, 0);
-        if (canMove){
+        if (canMove && !onPause){
             
             GameObject celluloDog;
             float distance = Mathf.Infinity;

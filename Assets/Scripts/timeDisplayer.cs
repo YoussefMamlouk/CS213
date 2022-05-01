@@ -12,8 +12,9 @@ public class timeDisplayer : MonoBehaviour
 
     public void displayTime()
     {
-        realTime = sld.value * 120f;
-        timeChosen.text = realTime.ToString() + " seconds.";
+        realTime = Mathf.FloorToInt(sld.value * 270f);
+        float f = realTime + 30;
+        timeChosen.text = f.ToString() + " seconds.";
     }
     public void erraseTime()
     {
@@ -21,6 +22,6 @@ public class timeDisplayer : MonoBehaviour
     }
     public float getRealTime()
     {
-        return realTime;
+        return realTime + 30;
     }
 }

@@ -11,15 +11,26 @@ public class MoveWithKeyboardBehavior : AgentBehaviour
 {
     private InputKeyboard inputKeyboard;
     private bool ready = false;
-
+    private bool onPause;
+    public void pauseUnpause(){
+        onPause = !onPause;
+    }
+    public void Start(){
+        onPause = false;
+    }
+    
+    
     public void changeStatusToWasd()
     {
-         inputKeyboard = InputKeyboard.wasd;          
-        
+        inputKeyboard = InputKeyboard.wasd;
     }
     public void changeStatusToArrows()
     {
-    inputKeyboard = InputKeyboard.arrows;
+        inputKeyboard = InputKeyboard.arrows;
+        
+    }
+    public bool getOnPause(){
+return onPause;
     }
     
 
@@ -27,7 +38,7 @@ public class MoveWithKeyboardBehavior : AgentBehaviour
     {
         canMove = !tmr.isGameOverOrNot();
         Steering steering = new Steering();
-        if (canMove){
+        if (canMove && !onPause){
             float horizontal = 0f;
             float vertical = 0f;
             
