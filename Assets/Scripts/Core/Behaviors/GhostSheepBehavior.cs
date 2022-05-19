@@ -11,6 +11,13 @@ public class GhostSheepBehavior : AgentBehaviour
     public AudioClip audioSheep;
     public AudioClip audioWolf;
     public bool musicPlaying;
+    private bool allyFind;
+    private GameObject losingPlayer;
+    private GameObject winningPlayer;
+    public Timer overallTimer;
+    public float publicTimer;
+
+
 
 
     public AudioClip losePoint;
@@ -23,7 +30,9 @@ public class GhostSheepBehavior : AgentBehaviour
     }
     public void Start()
     {
+
         onPause = false;
+        allyFind = false;
         src = GetComponent<AudioSource>();
         musicPlaying = true;
         state = 1.0f;
@@ -35,9 +44,11 @@ public class GhostSheepBehavior : AgentBehaviour
     }
     public void changeState()
     {
+
         currentTime = 0.0f;
         timer = Random.Range(10.0f, 20.0f);
         state = -state;
+        
         if (!tmr.isGameOverOrNot() && !onPause)
         {
             if (state == 1.0f)
@@ -48,7 +59,7 @@ public class GhostSheepBehavior : AgentBehaviour
                 dogs[0].GetComponent<CelluloAgentRigidBody>().MoveOnStone();
                 dogs[1].GetComponent<CelluloAgentRigidBody>().MoveOnStone();
             }
-            else
+            else if (state == -1)
             {
                 src.clip = audioSheep;
                 transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.green, 0);
@@ -70,6 +81,36 @@ public class GhostSheepBehavior : AgentBehaviour
         }
 
     }
+    public void activateJoker(){
+        //src.clip = " clip du jok ";
+        state = 1.0f;
+        Debug.Log(publicTimer%60.0f);
+        if(publicTimer%60.0f >= 9.9f){
+            allyFind = false;
+            changeState();
+        }
+        else{
+         transform.GetComponent<CelluloAgentRigidBody>().SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.yellow, 0);
+
+        GameObject cellulo1 = dogs[0];
+         int score1  = cellulo1.GetComponent<ChangeScore>().getScore();
+        GameObject cellulo2 = dogs[1];
+         int score2 = cellulo2.GetComponent<ChangeScore>().getScore();
+        allyFind = true;
+        if(score1 > score2){
+            losingPlayer = cellulo2;
+            winningPlayer = cellulo1;
+        }
+        else if( score2 > score1){
+            losingPlayer = cellulo1;
+            winningPlayer = cellulo2;
+        }
+        winningPlayer.GetComponent<CelluloAgentRigidBody>().MoveOnStone();
+        losingPlayer.GetComponent<CelluloAgentRigidBody>().ClearHapticFeedback();
+        losingPlayer.GetComponent<CelluloAgentRigidBody>().SetCasualBackdriveAssistEnabled(true);
+        }
+
+    }
     public void muteUnmute()
     {
         musicPlaying = !musicPlaying;
@@ -77,14 +118,20 @@ public class GhostSheepBehavior : AgentBehaviour
 
     public override void FixedUpdate()
     {
+        //Debug.Log(allyFind);
+        publicTimer = overallTimer.getTime(); 
         canMove = !tmr.isGameOverOrNot();
         if (canMove && !tmr.isGameOverOrNot() && !onPause)
         {
             currentTime += Time.deltaTime;
-
-            if (currentTime >= timer)
+            if(publicTimer%60.0f < 10.0f  &&  publicTimer > 10.0f){
+             activateJoker();
+            }
+            else{
+            if (currentTime >= timer && !allyFind)
             {
                 changeState();
+            }
             }
 
             if (agent.blendWeight)
@@ -102,8 +149,13 @@ public class GhostSheepBehavior : AgentBehaviour
             
             GameObject celluloDog;
             float distance = Mathf.Infinity;
+            if(allyFind){
+                celluloDog = winningPlayer;
+                distance = 1.0f;
+
+            }else{
             (celluloDog, distance) = FindClosestEnemy(distance);
-            
+            }
             if (distance != Mathf.Infinity)
             {
 

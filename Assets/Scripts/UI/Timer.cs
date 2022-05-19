@@ -52,7 +52,7 @@ public class Timer : MonoBehaviour
     public void Awake() {
         initTimerValue = Time.time;
         maxTime = 30;
-           timerStart = false;
+        timerStart = false;
         isGameOver = true;
     }
     public void pauseUnpause(){
@@ -198,5 +198,6 @@ public class Timer : MonoBehaviour
     {
         return isGameOver;
     }
+    public float getTime(){return  initTimerValue;}
    
 }

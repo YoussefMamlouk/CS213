@@ -10977,6 +10977,7 @@ MonoBehaviour:
   audioSheep: {fileID: 8300000, guid: 606621ca451e37dc7814bb28809e9de5, type: 3}
   audioWolf: {fileID: 8300000, guid: 38694c16ea2afe33da8620b6cad520af, type: 3}
   musicPlaying: 0
+  overallTimer: {fileID: 1339500229}
   losePoint: {fileID: 8300000, guid: b5d7cc4015587537eab03e862bb68a45, type: 3}
 --- !u!82 &1754026726
 AudioSource:
