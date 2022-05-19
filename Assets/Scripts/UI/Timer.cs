@@ -48,9 +48,12 @@ public class Timer : MonoBehaviour
 
     public bool musicPlaying;
     private bool onPause;
+    public GameObject blockObject;
+    private bool blockAppeared;
 
     public void Awake() {
         initTimerValue = Time.time;
+        blockAppeared = false;
         maxTime = 30;
         timerStart = false;
         isGameOver = true;
@@ -143,6 +146,20 @@ public class Timer : MonoBehaviour
         {
             appearGem();
         }
+        if(maxTime - initTimerValue < 30.0f && !blockAppeared){
+            appearBlockObject();
+        }
+    }
+    public void appearBlockObject(){
+        Vector3 blockPosition = new Vector3(UnityEngine.Random.Range(3f, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
+        while ((blockPosition - player1GameObject.transform.position).magnitude < 2 || (blockPosition - player2GameObject.transform.position).magnitude < 2)
+        {
+            blockPosition = new Vector3(UnityEngine.Random.Range(3, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
+        }
+        blockObject.SetActive(true);
+        blockObject.transform.position = blockPosition;
+        blockAppeared = true;
+    
     }
 
     private void appearGem()
@@ -164,6 +181,9 @@ public class Timer : MonoBehaviour
     public void stopMusic(){
         gemSoundSource.Stop();
     }
+    public void destroyBlock(){
+        blockObject.SetActive(false);
+    }
 
     public void destroyGem()
     {
@@ -178,7 +198,7 @@ public class Timer : MonoBehaviour
     public void bonusApplied() {
         GemSpawned = false;
      if( musicPlaying && !onPause){
-        gemSoundSource.clip = IJA;
+        gemSoundSource.clip =IJA ;
         gemSoundSource.Play();}
     }
 

@@ -10,13 +10,19 @@ public enum InputKeyboard{
 public class MoveWithKeyboardBehavior : AgentBehaviour
 {
     private InputKeyboard inputKeyboard;
+    public MoveWithKeyboardBehavior otherPlayer;
     private bool ready = false;
     private bool onPause;
+    public Timer timer;
+    private bool gotBlockedByObject;
+    private float timerOfBlock;
     public void pauseUnpause(){
         onPause = !onPause;
     }
     public void Start(){
         onPause = false;
+        gotBlockedByObject = false;
+        timerOfBlock = 0.0f;
     }
     
     
@@ -30,7 +36,30 @@ public class MoveWithKeyboardBehavior : AgentBehaviour
         
     }
     public bool getOnPause(){
-return onPause;
+       return onPause;
+    }
+     public void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag.Contains("blockObject")){
+            otherPlayer.playerBlocked();
+            timer.destroyBlock();
+        }
+    }
+    public void playerBlocked(){
+        gotBlockedByObject = true;
+        timerOfBlock = 10.0f;
+    }
+    public override void FixedUpdate(){
+        if(gotBlockedByObject){
+            timerOfBlock -= Time.deltaTime;
+            if(timerOfBlock <= 0.0f){
+                resetPlayerMovement();
+            } 
+        }
+
+    }
+    public void resetPlayerMovement(){
+        gotBlockedByObject = false;
     }
     
 
@@ -38,7 +67,7 @@ return onPause;
     {
         canMove = !tmr.isGameOverOrNot();
         Steering steering = new Steering();
-        if (canMove && !onPause){
+        if (canMove && !onPause && !gotBlockedByObject){
             float horizontal = 0f;
             float vertical = 0f;
             

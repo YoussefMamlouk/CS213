@@ -9,6 +9,7 @@ TagManager:
   - CelluloDog
   - gameOver
   - Gem
+  - blockObject
   layers:
   - Default
   - TransparentFX
