@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -176,7 +176,7 @@ public class CelluloManager : MonoBehaviour
 
         // Set the scrollbar position to the top
         Canvas.ForceUpdateCanvases();
-        _cellulosListScrollRect.verticalNormalizedPosition = 0;
+       _cellulosListScrollRect.verticalNormalizedPosition = 0;
         Canvas.ForceUpdateCanvases();
     }
 

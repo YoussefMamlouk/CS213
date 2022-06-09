@@ -6,6 +6,9 @@ public class AgentBehaviour : MonoBehaviour
     protected CelluloAgent agent;
     public bool canMove = false;
     public Timer tmr;
+    public enum Directions{
+     RIGHT = 0, UP = 1, LEFT = 2, DOWN = 3, NOWHERE = 4
+    }
 
     public virtual void Awake()
     {

@@ -1,0 +1,87 @@
+algorithm pour pattern game IPS: 
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public enum Directions{
+RIGHT = 0, UP = 1, LEFT = 2, DOWN = 3, NOWHERE = 4
+}
+
+public class Pattern : AgentBehavior {
+
+private ArrayList<Directions> pattern;
+private int indexExecuted;
+public bool isExecutingPattern;
+public Vector3 initialPosition;
+private final float step = 1.29f;
+
+
+public void Start(){
+initialPosition  = this.transform.position;
+indexExecuted = 0;
+isExecutingPattern = false;
+}
+
+public void generateNewDirection()
+{
+int index = Random.Range(0,3);
+switch(index) {
+case 0 : pattern.add(Directions.RIGHT);
+case 1 : pattern.add(Directions.UP);
+case 2 : pattern.add(Directions.LEFT);
+case 3 : pattern.add(Directions.DOWN);
+default : pattern.add(Directions.NOWHERE);
+
+}
+}
+
+public override Steering GetSteering()
+{
+Steering steering = new Steering();
+switch(pattern[indexExecuted]){
+case Directions.RIGHT: steering.linear = new Vector3(1,0,0);
+case Directions.LEFT : steering.linear = new Vector3(-1,0,0);
+case Directions.UP: steering.linear = new Vector3(0,1,0);
+case Directions.DOWN: steering.linear = new Vector3(0,-1,0);
+isExecutingPattern = false;
+
+}
+
+
+}
+
+public override void FixedUpdate(){
+
+Vector3 vec = initialPosition;
+for(int i = 0; i<= indexExecuted; i++){
+switch(pattern[i]){
+case Directions.RIGHT : vec = new Vector3(vec.x + step, vec.y, vec.z);
+case Directions.LEFT : vec = new Vector3(vec.x - step , vec.y, vec.z);
+case Directions.UP :  vec = new Vector3(vec.x  , vec.y + step, vec.z);
+case Directions.DOWN :  vec = new Vector3(vec.x , vec - step, vec.z);
+}
+}
+if(transform.position == ){
+ isExecuting();
+}
+if(isExecutingPattern){
+if (agent.blendWeight)
+agent.SetSteering(GetSteering(), weight);
+else
+agent.SetSteering(GetSteering());
+
+}
+
+}
+
+public void isExecuting(){
+isExecutingPattern = true;
+}
+
+
+}
+
+
+}

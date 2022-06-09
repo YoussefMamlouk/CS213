@@ -1,0 +1,141 @@
+using System.Linq;
+using UnityEngine;
+using System.Collections.Generic;
+
+public class Pattern : AgentBehaviour {
+
+private static List<Directions> pattern;
+private bool isShowingPattern;
+private int indexExecuted;
+public bool isExecutingCurrentIndex;
+private Vector3 initialPosition;
+private readonly float step = 58.0f;
+private Steering currentSteering;
+
+
+public void Start(){
+currentSteering = new Steering();
+isShowingPattern = true;
+pattern = new List<Directions>();
+initialPosition  = this.transform.position;
+indexExecuted = -1;
+isExecutingCurrentIndex = true;
+generateNewDirection();
+}
+
+public void generateNewDirection()
+{
+int index = Random.Range(0,3);
+switch(index) {
+case 0 : pattern.Add(Directions.RIGHT); break;
+case 1 : pattern.Add(Directions.UP); break;
+case 2 : pattern.Add(Directions.LEFT); break;
+case 3 : pattern.Add(Directions.DOWN); break;
+default : pattern.Add(Directions.NOWHERE); break;
+
+}
+indexExecuted++;
+
+}
+
+public override Steering GetSteering()
+{
+
+Vector3 vec = new Vector3(0,0,0);
+
+switch(pattern[indexExecuted]){
+case Directions.RIGHT: 
+vec = new Vector3(step,0,0);
+ break;
+case Directions.LEFT : 
+vec = new Vector3(-step,0,0);
+break;
+case Directions.UP: 
+vec = new Vector3(0,step,0);
+break;
+case Directions.DOWN: 
+vec = new Vector3(0,-step,0);
+break;
+case Directions.NOWHERE : 
+vec = new Vector3(0,0,0);
+break;
+}
+
+if(isExecutingCurrentIndex){
+    
+    isExecutingCurrentIndex = false;
+    currentSteering.linear = vec * 1000000f * agent.maxAccel;
+}
+
+return currentSteering;
+
+}
+
+public override void FixedUpdate(){
+    if(isShowingPattern){
+    executePattern();
+    }
+}
+
+
+public void executePattern(){
+
+Vector3 vec = initialPosition;
+vec = new Vector3(vec.x - 481f, vec.y - 270f , -12.4f);
+
+for(int i = 0; i<= indexExecuted; i++){
+switch(pattern[i]){
+case Directions.RIGHT :
+ vec = new Vector3(vec.x + step, vec.y, vec.z); break;
+case Directions.LEFT :
+ vec = new Vector3(vec.x - step , vec.y, vec.z); break;
+case Directions.UP :  
+ vec = new Vector3(vec.x  , vec.y + step, vec.z); break;
+case Directions.DOWN :
+  vec = new Vector3(vec.x , vec.y - step, vec.z); break; 
+}
+}
+
+Vector3 vex = new Vector3(transform.position.x - 481f, transform.position.y - 270f, -12.4f);
+
+if(compareTwoVectors(vex, vec)){ 
+ isExecuting();
+}
+
+if (agent.blendWeight)
+agent.SetSteering(GetSteering(), weight);
+else
+agent.SetSteering(GetSteering());
+}
+
+
+
+public void isExecuting(){
+isExecutingCurrentIndex = true;
+if(indexExecuted <= pattern.Count - 1){
+generateNewDirection();
+}
+
+}
+
+
+public void isShowing(){
+    isShowingPattern = true;
+}
+
+public void isNoMoreShowing(){
+    isShowingPattern = false;
+}
+public bool compareTwoVectors(Vector3 v1, Vector3 v2){
+    bool xBool,yBool = false;
+
+        xBool = Mathf.Abs(v1.x - v2.x) <= 1f;
+        yBool = Mathf.Abs(v1.y - v2.y) <= 1f;
+    
+
+    return xBool && yBool;
+
+}
+
+}
+

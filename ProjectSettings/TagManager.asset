@@ -10,6 +10,7 @@ TagManager:
   - gameOver
   - Gem
   - blockObject
+  - player
   layers:
   - Default
   - TransparentFX
