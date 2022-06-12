@@ -9,8 +9,8 @@ public class SteeringAgent : MonoBehaviour
 {
     public bool blendWeight = false; //!< If more than one behavior is included and the desired output is a weighted sum of the different behaviors.
 
-    public float maxSpeed  {get; protected set;} = 3f; //!< maximum speed in unity units
-    public float maxAccel {get; protected set;}  = 15f; //!< maximum acceleration in unity units
+    public float maxSpeed  {get; protected set;} = 3f; //!< maximum speed in unity units (3)
+    public float maxAccel {get; protected set;}  = 15f; //!< maximum acceleration in unity units (15)
     public float maxRotation {get; protected set;}  = 360f; //!< maximum rotation in unity units
     public float maxAngularAccel {get; protected set;}  = 7.5f; //!< maximum angular accel in unity units
 
@@ -59,6 +59,10 @@ public class SteeringAgent : MonoBehaviour
     {
         this.steering.linear += (weight * steering.linear);
         this.steering.angular += (weight * steering.angular);
+    }
+
+    public void SetMaxSpeed(float speed){
+        maxSpeed = speed;
     }   
 }
 

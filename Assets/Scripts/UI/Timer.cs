@@ -13,6 +13,8 @@ public class Timer : MonoBehaviour
     public CelluloAgentRigidBody player1rigid;
     public CelluloAgentRigidBody player2rigid;
 
+    public GameObject ImageFoot;
+
     public GameObject pauseButton;
     public TextMeshProUGUI timerWhenResume;
     public TextMeshProUGUI timerText;
@@ -48,12 +50,10 @@ public class Timer : MonoBehaviour
 
     public bool musicPlaying;
     private bool onPause;
-    public GameObject blockObject;
-    private bool blockAppeared;
+    private bool timeout = false;
 
     public void Awake() {
         initTimerValue = Time.time;
-        blockAppeared = false;
         maxTime = 30;
         timerStart = false;
         isGameOver = true;
@@ -71,7 +71,10 @@ public class Timer : MonoBehaviour
         onPause = false;
         gemSoundSource = this.GetComponent<AudioSource>();
         GemSpawned = false;
-        gem.SetActive(false);
+        if (gem!=null){
+            gem.SetActive(false);
+        }
+        
         timerText.text = string.Format("{0:00}:{1:00}", 0, 0);
         maxTime = timeDisplayer.getRealTime();
         musicPlaying = true ; 
@@ -100,18 +103,22 @@ public class Timer : MonoBehaviour
                 float minutes = Mathf.FloorToInt(initTimerValue / 60);
                 float seconds = Mathf.FloorToInt(initTimerValue % 60);
                 timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+                if (maxTime - initTimerValue <= 60.0f){
+                    timeout = true;
+        }
             }
             else
             {
                 timerStart = false;
             }
 
-
-            
         }
         slider.size = initTimerValue / maxTime;
         if (initTimerValue >= maxTime && !onPause)
         {
+            if(ImageFoot != null){
+            ImageFoot.SetActive(false);
+            }
             isGameOver = true;
             pauseButton.SetActive(false);
             ButtonPlayAgain.SetActive(true);
@@ -144,22 +151,13 @@ public class Timer : MonoBehaviour
         if ( f > 7497f && !GemSpawned && initTimerValue <= maxTime && !onPause && timerStart && !isGameOver)
 
         {
-            appearGem();
+            if (gem!=null){
+                appearGem();
+            }
+            
         }
-        if(maxTime - initTimerValue < 30.0f && !blockAppeared){
-            appearBlockObject();
-        }
-    }
-    public void appearBlockObject(){
-        Vector3 blockPosition = new Vector3(UnityEngine.Random.Range(3f, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
-        while ((blockPosition - player1GameObject.transform.position).magnitude < 2 || (blockPosition - player2GameObject.transform.position).magnitude < 2)
-        {
-            blockPosition = new Vector3(UnityEngine.Random.Range(3, 28f), 0f, UnityEngine.Random.Range(-16f, -2f));
-        }
-        blockObject.SetActive(true);
-        blockObject.transform.position = blockPosition;
-        blockAppeared = true;
-    
+
+        
     }
 
     private void appearGem()
@@ -181,9 +179,6 @@ public class Timer : MonoBehaviour
     public void stopMusic(){
         gemSoundSource.Stop();
     }
-    public void destroyBlock(){
-        blockObject.SetActive(false);
-    }
 
     public void destroyGem()
     {
@@ -198,7 +193,7 @@ public class Timer : MonoBehaviour
     public void bonusApplied() {
         GemSpawned = false;
      if( musicPlaying && !onPause){
-        gemSoundSource.clip =IJA ;
+        gemSoundSource.clip = IJA;
         gemSoundSource.Play();}
     }
 
@@ -219,5 +214,9 @@ public class Timer : MonoBehaviour
         return isGameOver;
     }
     public float getTime(){return  initTimerValue;}
+
+    public bool isTimeout(){
+        return timeout;
+    }
    
 }

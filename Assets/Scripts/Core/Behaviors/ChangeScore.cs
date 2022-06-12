@@ -9,6 +9,7 @@ public class ChangeScore : MonoBehaviour
 
     private int score;
     public TextMeshProUGUI txt;
+    public Timer timer;
 
 
     public void Start()
@@ -30,16 +31,21 @@ public class ChangeScore : MonoBehaviour
 
     public void incrementScore()
     {
-                if(!this.GetComponent<MoveWithKeyboardBehavior>().getOnPause())
-
-        score++;
+        if(!this.GetComponent<MoveWithKeyboardBehavior>().getOnPause())
+            if (timer.isTimeout())
+                score+=2;
+            else
+                score++;
     }
 
     public void decrementScore()
     {
-                if(!this.GetComponent<MoveWithKeyboardBehavior>().getOnPause())
+        if(!this.GetComponent<MoveWithKeyboardBehavior>().getOnPause())
 
-        score--;
+           if (timer.isTimeout())
+                score-=2;
+            else
+                score--;
     }
 
     public int getScore()

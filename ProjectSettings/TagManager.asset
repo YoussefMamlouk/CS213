@@ -11,6 +11,9 @@ TagManager:
   - Gem
   - blockObject
   - player
+  - Player1
+  - Side Border
+  - Front Border
   layers:
   - Default
   - TransparentFX
